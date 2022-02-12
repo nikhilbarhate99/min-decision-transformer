@@ -1,0 +1,9 @@
+dt_runs/
+data/
+__pycache__/
+*.ipynb
+*.csv
+*.log
+*.pt
+*.pkl
+
