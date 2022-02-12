@@ -241,7 +241,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--env', type=str, default='walker2d')
-    parser.add_argument('--dataset', type=str, default='medium-replay')
+    parser.add_argument('--dataset', type=str, default='medium')
     parser.add_argument('--rtg_scale', type=int, default=1000)
 
     parser.add_argument('--max_ep_len', type=int, default=1000)

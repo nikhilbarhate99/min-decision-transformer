@@ -50,11 +50,11 @@ def test(args):
     ## passing a list will evaluate on all checkpoints
     ## and output mean and std score
 
-    eval_chk_pt_list = [
-        "dt_halfcheetah-medium-v2_model_22-02-09-10-38-54_best.pt",
-        "dt_halfcheetah-medium-v2_model_22-02-10-11-56-32_best.pt",
-        "dt_halfcheetah-medium-v2_model_22-02-11-10-13-57_best.pt"
-    ]
+    # eval_chk_pt_list = [
+    #     "dt_halfcheetah-medium-v2_model_22-02-09-10-38-54_best.pt",
+    #     "dt_halfcheetah-medium-v2_model_22-02-10-11-56-32_best.pt",
+    #     "dt_halfcheetah-medium-v2_model_22-02-11-10-13-57_best.pt"
+    # ]
 
 
     device = torch.device(args.device)
@@ -99,7 +99,7 @@ def test(args):
         print(results)
 
         norm_score = get_d4rl_normalized_score(results['eval/avg_reward'], eval_env_name) * 100
-        print("normalized d4rl score: ", norm_score)
+        print("normalized d4rl score: " + format(norm_score, ".5f"))
 
         all_scores.append(norm_score)
 

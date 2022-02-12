@@ -23,9 +23,9 @@ def plot(args):
     save_fig = args.save_fig
 
     if plot_avg:
-        save_fig_path = env_d4rl_name + "_avg.jpg"
+        save_fig_path = env_d4rl_name + "_avg.png"
     else:
-        save_fig_path = env_d4rl_name + ".jpg"
+        save_fig_path = env_d4rl_name + ".png"
 
     all_files = glob.glob(log_dir + f'/dt_{env_d4rl_name}*.csv')
 
