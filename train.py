@@ -128,10 +128,11 @@ def train(args):
                 drop_p=dropout_p,
             ).to(device)
 
-    optimizer = torch.optim.AdamW(model.parameters(),
-                                lr=lr,
-    							weight_decay=wt_decay
-                            )
+    optimizer = torch.optim.AdamW(
+                        model.parameters(),
+                        lr=lr,
+                        weight_decay=wt_decay
+                    )
 
     scheduler = torch.optim.lr_scheduler.LambdaLR(
                             optimizer,
@@ -241,7 +242,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--env', type=str, default='walker2d')
+    parser.add_argument('--env', type=str, default='halfcheetah')
     parser.add_argument('--dataset', type=str, default='medium')
     parser.add_argument('--rtg_scale', type=int, default=1000)
 

@@ -21,7 +21,7 @@ Install `mujoco-py` library by following instructions on [mujoco-py repo](https:
 
 ### D4RL Data
 
-Datasets are expected to be stored in the `data` directory. Install the [D4RL repo](https://github.com/rail-berkeley/d4rl). Then save formated data in the `data` directory using the following script:
+Datasets are expected to be stored in the `data` directory. Install the [D4RL repo](https://github.com/rail-berkeley/d4rl). Then save formatted data in the `data` directory using the following script:
 ```
 python3 data/download_d4rl_datasets.py
 ```
@@ -40,18 +40,21 @@ python3 data/download_d4rl_datasets.py
 
 ## Results
 
-**Note:** these results are mean and variance of 3 random seeds obtained after 20k updates while the official results are obtained after training for 100k updates. The variance in score should decrease as training reaches saturation.
+**Note:** these results are mean and variance of 3 random seeds obtained after 20k updates while the official results are obtained after 100k updates. The variance in returns and score should decrease as training reaches saturation.
 
 
 | Dataset | Environment | DT (this repo) 20k updates | DT (official) 100k updates|
 | :---: | :---: | :---: | :---: |
 | Medium | HalfCheetah | 42.18 ± 0.77 | 42.6 ± 0.1 |
+| Medium | Hopper | 68.54 ± 5.9 | 67.6 ± 1.0 |
 
 
 | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.gif)  |
 | :---:|:---: |
 
 
+| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.gif)  |
+| :---:|:---: |
 
 
 ## Citing 

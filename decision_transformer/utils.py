@@ -26,7 +26,7 @@ def get_d4rl_dataset_stats(env_d4rl_name):
 
 
 def evaluate_on_env(model, device, context_len, env, rtg_target, rtg_scale,
-                    num_eval_ep=10, max_test_ep_len=2000,
+                    num_eval_ep=10, max_test_ep_len=1000,
                     state_mean=None, state_std=None, render=False):
 
     eval_batch_size = 1  # required for forward pass

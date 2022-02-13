@@ -1,8 +1,8 @@
-dt_runs/
 __pycache__/
 *.ipynb
 *.csv
 *.log
 *.pt
 *.pkl
-
+*.png
+*.gif

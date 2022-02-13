@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--chk_pt_dir', type=str, default='dt_runs/')
     parser.add_argument('--chk_pt_name', type=str,
-            default='dt_halfcheetah-medium-v2_model_22-02-09-10-38-54.pt')
+            default='dt_halfcheetah-medium-v2_model_22-02-13-09-03-10_best.pt')
 
     parser.add_argument('--context_len', type=int, default=20)
     parser.add_argument('--n_blocks', type=int, default=3)

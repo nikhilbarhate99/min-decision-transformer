@@ -10,7 +10,7 @@ import d4rl
 def download_d4rl_data():
 	datasets = []
 
-	data_dir = ''
+	data_dir = 'data/'
 
 	print(data_dir)
 
