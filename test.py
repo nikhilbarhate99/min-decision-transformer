@@ -8,8 +8,8 @@ from decision_transformer.model import DecisionTransformer
 
 def test(args):
 
-    eval_dataset = args.dataset
-    eval_rtg_scale = args.rtg_scale
+    eval_dataset = args.dataset         # medium / medium-replay / medium-expert
+    eval_rtg_scale = args.rtg_scale     # normalize returns to go
 
     if args.env == 'walker2d':
         eval_env_name = 'Walker2d-v3'
@@ -29,16 +29,17 @@ def test(args):
     else:
         raise NotImplementedError
 
-    render = args.render
+    render = args.render                # render the env frames
 
-    context_len = args.context_len
-    n_blocks = args.n_blocks
-    embed_dim = args.embed_dim
-    n_heads = args.n_heads
-    dropout_p = args.dropout_p
+    num_test_eval_ep = args.num_eval_ep         # num of evaluation episodes
+    eval_max_eval_ep_len = args.max_eval_ep_len # max len of one episode
 
-    num_test_eval_ep = args.num_eval_ep
-    eval_max_ep_len = args.max_ep_len
+    context_len = args.context_len      # K in decision transformer
+    n_blocks = args.n_blocks            # num of transformer blocks
+    embed_dim = args.embed_dim          # embedding (hidden) dim of transformer
+    n_heads = args.n_heads              # num of transformer heads
+    dropout_p = args.dropout_p          # dropout probability
+
 
     eval_chk_pt_dir = args.chk_pt_dir
 
@@ -81,7 +82,6 @@ def test(args):
         			context_len=context_len,
         			n_heads=n_heads,
         			drop_p=dropout_p,
-                    max_timestep=1000
         		).to(device)
 
         eval_chk_pt_path = os.path.join(eval_chk_pt_dir, eval_chk_pt_name)
@@ -94,7 +94,7 @@ def test(args):
         # evaluate on env
         results = evaluate_on_env(eval_model, device, context_len,
                                 eval_env, eval_rtg_target, eval_rtg_scale,
-        						num_test_eval_ep, eval_max_ep_len,
+        						num_test_eval_ep, eval_max_eval_ep_len,
         						eval_state_mean, eval_state_std, render=render)
         print(results)
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, default='medium')
     parser.add_argument('--rtg_scale', type=int, default=1000)
 
-    parser.add_argument('--max_ep_len', type=int, default=1000)
+    parser.add_argument('--max_eval_ep_len', type=int, default=1000)
     parser.add_argument('--num_eval_ep', type=int, default=10)
 
     parser.add_argument("--render", action="store_true", default=False)

@@ -1,8 +1,3 @@
-import math
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
 """
 this extremely minimal GPT model is based on:
 Misha Laskin's tweet:
@@ -11,9 +6,15 @@ https://twitter.com/MishaLaskin/status/1481767788775628801?cxt=HHwWgoCzmYD9pZApA
 and its corresponding notebook:
 https://colab.research.google.com/drive/1NUBqyboDcGte5qAJKOl8gaJC28V_73Iv?usp=sharing
 
-the above colab has a bug while applying masked_fill which is fixed in the
-following code
+the above colab notebook has a bug while applying masked_fill 
+which is fixed in the following code
 """
+
+import math
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
 
 class MaskedCausalAttention(nn.Module):
     def __init__(self, h_dim, max_T, n_heads, drop_p):

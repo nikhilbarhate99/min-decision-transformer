@@ -18,8 +18,8 @@ from decision_transformer.model import DecisionTransformer
 
 def train(args):
 
-    dataset = args.dataset
-    rtg_scale = args.rtg_scale
+    dataset = args.dataset          # medium / medium-replay / medium-expert
+    rtg_scale = args.rtg_scale      # normalize returns to go
 
     # use v3 env for evaluation because
     # Decision Transformer paper evaluates results on v3 envs
@@ -42,33 +42,34 @@ def train(args):
     else:
         raise NotImplementedError
 
-    max_ep_len = args.max_ep_len
-    num_eval_ep = args.num_eval_ep
+    max_eval_ep_len = args.max_eval_ep_len  # max len of one episode
+    num_eval_ep = args.num_eval_ep          # num of evaluation episodes
 
-    batch_size = args.batch_size
-    lr = args.lr
-    wt_decay = args.wt_decay
-    warmup_steps = args.warmup_steps
+    batch_size = args.batch_size            # training batch size
+    lr = args.lr                            # learning rate
+    wt_decay = args.wt_decay                # weight decay
+    warmup_steps = args.warmup_steps        # warmup steps for lr scheduler
 
     # total updates = max_train_iters x num_updates_per_iter
     max_train_iters = args.max_train_iters
     num_updates_per_iter = args.num_updates_per_iter
 
-    context_len = args.context_len
-    n_blocks = args.n_blocks
-    embed_dim = args.embed_dim
-    n_heads = args.n_heads
-    dropout_p = args.dropout_p
+    context_len = args.context_len      # K in decision transformer
+    n_blocks = args.n_blocks            # num of transformer blocks
+    embed_dim = args.embed_dim          # embedding (hidden) dim of transformer
+    n_heads = args.n_heads              # num of transformer heads
+    dropout_p = args.dropout_p          # dropout probability
 
+    # load data from this file
     dataset_path = f'{args.dataset_dir}/{env_d4rl_name}.pkl'
 
+    # saves model and csv in this directory
     log_dir = args.log_dir
-
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
+    # training and evaluation device
     device = torch.device(args.device)
-
 
     start_time = datetime.now().replace(microsecond=0)
     start_time_str = start_time.strftime("%y-%m-%d-%H-%M-%S")
@@ -88,7 +89,6 @@ def train(args):
 
     csv_writer.writerow(csv_header)
 
-
     print("=" * 60)
     print("start time: " + start_time_str)
     print("=" * 60)
@@ -98,14 +98,15 @@ def train(args):
     print("model save path: " + save_model_path)
     print("log csv save path: " + log_csv_path)
 
-
     traj_dataset = D4RLTrajectoryDataset(dataset_path, context_len, rtg_scale)
 
-    traj_data_loader = DataLoader(traj_dataset,
-    						batch_size=batch_size,
-    						shuffle=True,
-    						pin_memory=True,
-    						drop_last=True)
+    traj_data_loader = DataLoader(
+                            traj_dataset,
+                            batch_size=batch_size,
+                            shuffle=True,
+                            pin_memory=True,
+                            drop_last=True
+                        )
 
     data_iter = iter(traj_data_loader)
 
@@ -118,14 +119,14 @@ def train(args):
     act_dim = env.action_space.shape[0]
 
     model = DecisionTransformer(
-    			state_dim=state_dim,
-    			act_dim=act_dim,
-    			n_blocks=n_blocks,
-    			h_dim=embed_dim,
-    			context_len=context_len,
-    			n_heads=n_heads,
-    			drop_p=dropout_p,
-    		).to(device)
+                state_dim=state_dim,
+                act_dim=act_dim,
+                n_blocks=n_blocks,
+                h_dim=embed_dim,
+                context_len=context_len,
+                n_heads=n_heads,
+                drop_p=dropout_p,
+            ).to(device)
 
     optimizer = torch.optim.AdamW(model.parameters(),
                                 lr=lr,
@@ -142,82 +143,82 @@ def train(args):
 
     for i_train_iter in range(max_train_iters):
 
-        	log_action_losses = []
-        	model.train()
+        log_action_losses = []
+        model.train()
 
-        	for _ in range(num_updates_per_iter):
-        		try:
-        			timesteps, states, actions, returns_to_go, traj_mask = next(data_iter)
-        		except StopIteration:
-        			data_iter = iter(traj_data_loader)
-        			timesteps, states, actions, returns_to_go, traj_mask = next(data_iter)
+        for _ in range(num_updates_per_iter):
+            try:
+                timesteps, states, actions, returns_to_go, traj_mask = next(data_iter)
+            except StopIteration:
+                data_iter = iter(traj_data_loader)
+                timesteps, states, actions, returns_to_go, traj_mask = next(data_iter)
 
-        		timesteps = timesteps.to(device)	# B x T
-        		states = states.to(device)			# B x T x state_dim
-        		actions = actions.to(device)		# B x T x act_dim
-        		returns_to_go = returns_to_go.to(device).unsqueeze(dim=-1) # B x T x 1
-        		traj_mask = traj_mask.to(device)	# B x T
+            timesteps = timesteps.to(device)    # B x T
+            states = states.to(device)          # B x T x state_dim
+            actions = actions.to(device)        # B x T x act_dim
+            returns_to_go = returns_to_go.to(device).unsqueeze(dim=-1) # B x T x 1
+            traj_mask = traj_mask.to(device)    # B x T
 
-        		action_target = torch.clone(actions).detach().to(device)
+            action_target = torch.clone(actions).detach().to(device)
+            state_preds, action_preds, return_preds = model.forward(
+                                                            timesteps=timesteps,
+                                                            states=states,
+                                                            actions=actions,
+                                                            returns_to_go=returns_to_go
+                                                        )
+            # only consider non padded elements
+            action_preds = action_preds.view(-1, act_dim)[traj_mask.view(-1,) > 0]
+            action_target = action_target.view(-1, act_dim)[traj_mask.view(-1,) > 0]
 
-        		state_preds, action_preds, return_preds = model.forward(timesteps=timesteps,
-        												states=states,
-        												actions=actions,
-        												returns_to_go=returns_to_go)
+            action_loss = F.mse_loss(action_preds, action_target, reduction='mean')
 
-        		# only consider non padded elements
-        		action_preds = action_preds.view(-1, act_dim)[traj_mask.view(-1,) > 0]
-        		action_target = action_target.view(-1, act_dim)[traj_mask.view(-1,) > 0]
+            optimizer.zero_grad()
+            action_loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 0.25)
+            optimizer.step()
+            scheduler.step()
 
-        		action_loss = F.mse_loss(action_preds, action_target, reduction='mean')
+            log_action_losses.append(action_loss.detach().cpu().item())
 
-        		optimizer.zero_grad()
-        		action_loss.backward()
-        		torch.nn.utils.clip_grad_norm_(model.parameters(), 0.25)
-        		optimizer.step()
-        		scheduler.step()
+        # evaluate action accuracy
+        results = evaluate_on_env(model, device, context_len, env, rtg_target, rtg_scale,
+                                num_eval_ep, max_eval_ep_len, state_mean, state_std,
+        						)
+        eval_avg_reward = results['eval/avg_reward']
+        eval_avg_ep_len = results['eval/avg_ep_len']
+        eval_d4rl_score = get_d4rl_normalized_score(results['eval/avg_reward'], env_name) * 100
 
-        		log_action_losses.append(action_loss.detach().cpu().item())
+        mean_action_loss = np.mean(log_action_losses)
+        time_elapsed = str(datetime.now().replace(microsecond=0) - start_time)
 
-        	# evaluate action accuracy
-        	results = evaluate_on_env(model, device, context_len, env, rtg_target, rtg_scale,
-        	                        num_eval_ep, max_ep_len, state_mean, state_std,
-        							)
-        	eval_avg_reward = results['eval/avg_reward']
-        	eval_avg_ep_len = results['eval/avg_ep_len']
-        	eval_d4rl_score = get_d4rl_normalized_score(results['eval/avg_reward'], env_name) * 100
+        total_updates += num_updates_per_iter
 
-        	mean_action_loss = np.mean(log_action_losses)
-        	time_elapsed = str(datetime.now().replace(microsecond=0) - start_time)
+        log_str = ("=" * 60 + '\n' +
+                "time elapsed: " + time_elapsed  + '\n' +
+                "num of updates: " + str(total_updates) + '\n' +
+                "action loss: " +  format(mean_action_loss, ".5f") + '\n' +
+                "eval avg reward: " + format(eval_avg_reward, ".5f") + '\n' +
+                "eval avg ep len: " + format(eval_avg_ep_len, ".5f") + '\n' +
+                "eval d4rl score: " + format(eval_d4rl_score, ".5f")
+            )
 
-        	total_updates += num_updates_per_iter
+        print(log_str)
 
-        	log_str = ("=" * 60 + '\n' +
-        			"time elapsed: " + time_elapsed  + '\n' +
-        			"num of updates: " + str(total_updates) + '\n' +
-        			"action loss: " +  format(mean_action_loss, ".5f") + '\n' +
-        			"eval avg reward: " + format(eval_avg_reward, ".5f") + '\n' +
-        			"eval avg ep len: " + format(eval_avg_ep_len, ".5f") + '\n' +
-        			"eval d4rl score: " + format(eval_d4rl_score, ".5f")
-        			)
+        log_data = [time_elapsed, total_updates, mean_action_loss,
+                    eval_avg_reward, eval_avg_ep_len,
+                    eval_d4rl_score]
 
-        	print(log_str)
+        csv_writer.writerow(log_data)
 
-        	log_data = [time_elapsed, total_updates, mean_action_loss,
-        				eval_avg_reward, eval_avg_ep_len,
-        				eval_d4rl_score]
+        # save model
+        print("max d4rl score: " + format(max_d4rl_score, ".5f"))
+        if eval_d4rl_score >= max_d4rl_score:
+            print("saving max d4rl score model at: " + save_best_model_path)
+            torch.save(model.state_dict(), save_best_model_path)
+            max_d4rl_score = eval_d4rl_score
 
-        	csv_writer.writerow(log_data)
-
-        	# save model
-        	print("max d4rl score: " + format(max_d4rl_score, ".5f"))
-        	if eval_d4rl_score >= max_d4rl_score:
-        		print("saving max d4rl score model at: " + save_best_model_path)
-        		torch.save(model.state_dict(), save_best_model_path)
-        		max_d4rl_score = eval_d4rl_score
-
-        	print("saving current model at: " + save_model_path)
-        	torch.save(model.state_dict(), save_model_path)
+        print("saving current model at: " + save_model_path)
+        torch.save(model.state_dict(), save_model_path)
 
 
     print("=" * 60)
@@ -244,7 +245,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, default='medium')
     parser.add_argument('--rtg_scale', type=int, default=1000)
 
-    parser.add_argument('--max_ep_len', type=int, default=1000)
+    parser.add_argument('--max_eval_ep_len', type=int, default=1000)
     parser.add_argument('--num_eval_ep', type=int, default=10)
 
     parser.add_argument('--dataset_dir', type=str, default='data/')
