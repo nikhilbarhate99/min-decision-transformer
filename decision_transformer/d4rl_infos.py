@@ -1,34 +1,16 @@
 
-# from infos.py from official d4rl github repo
-REF_MIN_SCORE = {
-    'halfcheetah' : -280.178953,
-    'walker2d' : 1.629008,
-    'hopper' : -20.272305,
-}
-
-REF_MAX_SCORE = {
-    'halfcheetah' : 12135.0,
-    'walker2d' : 4592.3,
-    'hopper' : 3234.3,
-}
-
-
-# calculated from d4rl datasets
-
 ## from infos.py from official d4rl github repo
-
-REF_MAX_SCORE = {
-    'halfcheetah' : 12135.0,
-    'walker2d' : 4592.3,
-    'hopper' : 3234.3,
-}
-
 REF_MIN_SCORE = {
     'halfcheetah' : -280.178953,
     'walker2d' : 1.629008,
     'hopper' : -20.272305,
 }
 
+REF_MAX_SCORE = {
+    'halfcheetah' : 12135.0,
+    'walker2d' : 4592.3,
+    'hopper' : 3234.3,
+}
 
 ## calculated from d4rl datasets
 D4RL_DATASET_STATS = {
