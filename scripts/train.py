@@ -159,8 +159,8 @@ def train(args):
             actions = actions.to(device)        # B x T x act_dim
             returns_to_go = returns_to_go.to(device).unsqueeze(dim=-1) # B x T x 1
             traj_mask = traj_mask.to(device)    # B x T
-
             action_target = torch.clone(actions).detach().to(device)
+
             state_preds, action_preds, return_preds = model.forward(
                                                             timesteps=timesteps,
                                                             states=states,
@@ -183,8 +183,8 @@ def train(args):
 
         # evaluate action accuracy
         results = evaluate_on_env(model, device, context_len, env, rtg_target, rtg_scale,
-                                num_eval_ep, max_eval_ep_len, state_mean, state_std,
-        						)
+                                num_eval_ep, max_eval_ep_len, state_mean, state_std)
+
         eval_avg_reward = results['eval/avg_reward']
         eval_avg_ep_len = results['eval/avg_ep_len']
         eval_d4rl_score = get_d4rl_normalized_score(results['eval/avg_reward'], env_name) * 100

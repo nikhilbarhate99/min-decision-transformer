@@ -46,8 +46,9 @@ python3 data/download_d4rl_datasets.py
 
 | Dataset | Environment | DT (this repo) 20k updates | DT (official) 100k updates|
 | :---: | :---: | :---: | :---: |
-| Medium | HalfCheetah | 42.18 ± 0.77 | 42.6 ± 0.1 |
-| Medium | Hopper | 68.54 ± 5.9 | 67.6 ± 1.0 |
+| Medium | HalfCheetah | 42.18 ± 0.77 | 42.60 ± 0.10 |
+| Medium | Hopper | 68.54 ± 5.90 | 67.60 ± 1.00 |
+| Medium | Walker | 72.93 ± 6.46 | 74.00 ± 1.40 |
 
 
 | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.gif)  |
@@ -55,6 +56,10 @@ python3 data/download_d4rl_datasets.py
 
 
 | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.gif)  |
+| :---:|:---: |
+
+
+| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/walker2d-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/walker2d-medium-v2.gif)  |
 | :---:|:---: |
 
 
