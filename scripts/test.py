@@ -109,6 +109,7 @@ def test(args):
     print("total num of checkpoints evaluated: " + str(len(eval_chk_pt_list)))
     print("d4rl score mean: " + format(all_scores.mean(), ".5f"))
     print("d4rl score std: " + format(all_scores.std(), ".5f"))
+    print("d4rl score var: " + format(all_scores.var(), ".5f"))
     print("=" * 60)
 
 

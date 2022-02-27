@@ -41,14 +41,14 @@ python3 data/download_d4rl_datasets.py
 
 ## Results
 
-**Note:** these results are mean and variance of 3 random seeds obtained after 20k updates while the official results are obtained after 100k updates. The variance in returns and score should decrease as training reaches saturation.
+**Note:** these results are mean and variance of 3 random seeds obtained after 20k updates (due to timelimits on GPU resources on colab) while the official results are obtained after 100k updates. So these numbers are not directly comparable, but they can be used as rough reference points along with their corresponding plots to measure the learning progress of the model. The variance in returns and scores should decrease as training reaches saturation.
 
 
 | Dataset | Environment | DT (this repo) 20k updates | DT (official) 100k updates|
 | :---: | :---: | :---: | :---: |
-| Medium | HalfCheetah | 42.18 ± 0.77 | 42.60 ± 0.10 |
-| Medium | Hopper | 68.54 ± 5.90 | 67.60 ± 1.00 |
-| Medium | Walker | 72.93 ± 6.46 | 74.00 ± 1.40 |
+| Medium | HalfCheetah | 42.18 ± 0.59 | 42.60 ± 0.10 |
+| Medium | Hopper | 69.43 ± 27.34 | 67.60 ± 1.00 |
+| Medium | Walker | 75.47 ± 31.08 | 74.00 ± 1.40 |
 
 
 | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.gif)  |
