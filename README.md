@@ -65,7 +65,7 @@ python3 data/download_d4rl_datasets.py
 
 ## Citing
 
-Please use this bibtex if you want to cite this repository in your publications :
+Please use this bibtex if you want to cite this repository in your publications:
 
     @misc{minimal_decision_transformer,
         author = {Barhate, Nikhil},
