@@ -8,7 +8,7 @@ Notable difference from official implementation are:
 
 - Simple GPT implementation (causal transformer)
 - Uses PyTorch's Dataset and Dataloader class and removes redundant computations for calculating rewards to go and state normalization for efficient training
-- Can be trained and the results can be visualized on google colab with the provided notebook
+- Can be trained and the results can be visualized and rendered on google colab with the provided notebook
 
 #### [Open `min_decision_transformer.ipynb` in Google Colab](https://colab.research.google.com/github/nikhilbarhate99/min-decision-transformer/blob/master/min_decision_transformer.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nikhilbarhate99/min-decision-transformer/blob/master/min_decision_transformer.ipynb)
 
@@ -22,16 +22,36 @@ Install `mujoco-py` library by following instructions on [mujoco-py repo](https:
 
 ### D4RL Data
 
-Datasets are expected to be stored in the `data` directory. Install the [D4RL repo](https://github.com/rail-berkeley/d4rl). Then save formatted data in the `data` directory using the following script:
+Datasets are expected to be stored in the `data` directory. Install the [D4RL repo](https://github.com/rail-berkeley/d4rl). Then save formatted data in the `data` directory by running the following script:
 ```
 python3 data/download_d4rl_datasets.py
 ```
 
+
 ### Running experiments
 
+- Example command for training:
+```
+python3 scripts/train.py --env halfcheetah --dataset medium --device cuda
+```
 
 
-**Note:**
+- Example command for testing with a pretrained model:
+```
+python3 scripts/test.py --env halfcheetah --dataset medium --device cpu --num_eval_ep 1 --chk_pt_name dt_halfcheetah-medium-v2_model_22-02-13-09-03-10_best.pt
+```
+The `dataset` needs to be specified for testing, to load the same state normalization statistics (mean and var) that is used for training.
+An additional `--render` flag can be passed to the script for rendering the test episode.
+
+
+- Example command for plotting graphs using logged data from the csv files:
+```
+python3 scripts/plot.py --env_d4rl_name halfcheetah-medium-v2 --smoothing_window 5
+```
+Additionally `--plot_avg` and `--save_fig` flags can be passed to the script to average all values in one plot and to save the figure.
+
+
+### Note:
 1. If you find it difficult to install `mujoco-py` and `d4rl` then you can refer to their installation in the colab notebook
 2. Once the dataset is formatted and saved with `download_d4rl_datasets.py`, `d4rl` library is not required for training.
 3. The evaluation is done on `v3` control environments in `mujoco-py` so that the results are consistent with the decision transformer paper.
