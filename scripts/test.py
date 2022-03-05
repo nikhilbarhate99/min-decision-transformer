@@ -94,8 +94,8 @@ def test(args):
         # evaluate on env
         results = evaluate_on_env(eval_model, device, context_len,
                                 eval_env, eval_rtg_target, eval_rtg_scale,
-        						num_test_eval_ep, eval_max_eval_ep_len,
-        						eval_state_mean, eval_state_std, render=render)
+                                num_test_eval_ep, eval_max_eval_ep_len,
+                                eval_state_mean, eval_state_std, render=render)
         print(results)
 
         norm_score = get_d4rl_normalized_score(results['eval/avg_reward'], eval_env_name) * 100

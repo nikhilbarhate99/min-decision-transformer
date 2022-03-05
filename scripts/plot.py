@@ -82,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument('--log_dir', type=str, default='dt_runs/')
     parser.add_argument('--x_key', type=str, default='num_updates')
     parser.add_argument('--y_key', type=str, default='eval_d4rl_score')
-    parser.add_argument('--smoothing_window', type=int, default=5)
+    parser.add_argument('--smoothing_window', type=int, default=1)
     parser.add_argument("--plot_avg", action="store_true", default=False,
                     help="plot avg of all logs else plot separately")
     parser.add_argument("--save_fig", action="store_true", default=False,
