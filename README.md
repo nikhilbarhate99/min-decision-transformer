@@ -13,6 +13,32 @@ Notable difference from official implementation are:
 #### [Open `min_decision_transformer.ipynb` in Google Colab](https://colab.research.google.com/github/nikhilbarhate99/min-decision-transformer/blob/master/min_decision_transformer.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nikhilbarhate99/min-decision-transformer/blob/master/min_decision_transformer.ipynb)
 
 
+
+## Results
+
+**Note:** these results are mean and variance of 3 random seeds obtained after 20k updates (due to timelimits on GPU resources on colab) while the official results are obtained after 100k updates. So these numbers are not directly comparable, but they can be used as rough reference points along with their corresponding plots to measure the learning progress of the model. The variance in returns and scores should decrease as training reaches saturation.
+
+
+| Dataset | Environment | DT (this repo) 20k updates | DT (official) 100k updates|
+| :---: | :---: | :---: | :---: |
+| Medium | HalfCheetah | 42.18 ± 00.59 | 42.60 ± 00.10 |
+| Medium | Hopper | 69.43 ± 27.34 | 67.60 ± 01.00 |
+| Medium | Walker | 75.47 ± 31.08 | 74.00 ± 01.40 |
+
+
+| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.gif)  |
+| :---:|:---: |
+
+
+| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.gif)  |
+| :---:|:---: |
+
+
+| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/walker2d-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/walker2d-medium-v2.gif)  |
+| :---:|:---: |
+
+
+
 ## Instructions
 
 ### Mujoco-py
@@ -53,34 +79,8 @@ Additionally `--plot_avg` and `--save_fig` flags can be passed to the script to 
 
 ### Note:
 1. If you find it difficult to install `mujoco-py` and `d4rl` then you can refer to their installation in the colab notebook
-2. Once the dataset is formatted and saved with `download_d4rl_datasets.py`, `d4rl` library is not required for training.
+2. Once the dataset is formatted and saved with `download_d4rl_datasets.py`, `d4rl` library is not required further for training.
 3. The evaluation is done on `v3` control environments in `mujoco-py` so that the results are consistent with the decision transformer paper.
-
-
-
-
-## Results
-
-**Note:** these results are mean and variance of 3 random seeds obtained after 20k updates (due to timelimits on GPU resources on colab) while the official results are obtained after 100k updates. So these numbers are not directly comparable, but they can be used as rough reference points along with their corresponding plots to measure the learning progress of the model. The variance in returns and scores should decrease as training reaches saturation.
-
-
-| Dataset | Environment | DT (this repo) 20k updates | DT (official) 100k updates|
-| :---: | :---: | :---: | :---: |
-| Medium | HalfCheetah | 42.18 ± 0.59 | 42.60 ± 0.10 |
-| Medium | Hopper | 69.43 ± 27.34 | 67.60 ± 1.00 |
-| Medium | Walker | 75.47 ± 31.08 | 74.00 ± 1.40 |
-
-
-| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/halfcheetah-medium-v2.gif)  |
-| :---:|:---: |
-
-
-| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/hopper-medium-v2.gif)  |
-| :---:|:---: |
-
-
-| ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/walker2d-medium-v2.png)  | ![](https://github.com/nikhilbarhate99/min-decision-transformer/blob/master/media/walker2d-medium-v2.gif)  |
-| :---:|:---: |
 
 
 ## Citing
