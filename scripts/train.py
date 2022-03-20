@@ -236,8 +236,6 @@ def train(args):
     print("saved last updated model at: " + save_model_path)
     print("=" * 60)
 
-    csv_writer.close()
-
 
 
 if __name__ == "__main__":
