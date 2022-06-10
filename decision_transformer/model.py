@@ -152,9 +152,9 @@ class DecisionTransformer(nn.Module):
         # h[:, 0, t] is conditioned on the input sequence r_0, s_0, a_0 ... r_t
         # h[:, 1, t] is conditioned on the input sequence r_0, s_0, a_0 ... r_t, s_t
         # h[:, 2, t] is conditioned on the input sequence r_0, s_0, a_0 ... r_t, s_t, a_t
-        # that is, for each timestep (t) we have 3 transformer output embeddings,
+        # that is, for each timestep (t) we have 3 output embeddings from the transformer,
         # each conditioned on all previous timesteps plus 
-        # the 3 input variables at that timestep (r_t, s_t, a_t).
+        # the 3 input variables at that timestep (r_t, s_t, a_t) in sequence.
         h = h.reshape(B, T, 3, self.h_dim).permute(0, 2, 1, 3)
 
         # get predictions
