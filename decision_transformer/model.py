@@ -1,12 +1,14 @@
 """
-this extremely minimal GPT model is based on:
+this extremely minimal Decision Transformer model is based on
+the following causal transformer (GPT) implementation:
+
 Misha Laskin's tweet:
 https://twitter.com/MishaLaskin/status/1481767788775628801?cxt=HHwWgoCzmYD9pZApAAAA
 
 and its corresponding notebook:
 https://colab.research.google.com/drive/1NUBqyboDcGte5qAJKOl8gaJC28V_73Iv?usp=sharing
 
-the above colab notebook has a bug while applying masked_fill 
+** the above colab notebook has a bug while applying masked_fill 
 which is fixed in the following code
 """
 
@@ -136,7 +138,7 @@ class DecisionTransformer(nn.Module):
         returns_embeddings = self.embed_rtg(returns_to_go) + time_embeddings
 
         # stack rtg, states and actions and reshape sequence as
-        # (r1, s1, a1, r2, s2, a2 ...)
+        # (r_0, s_0, a_0, r_1, s_1, a_1, r_2, s_2, a_2 ...)
         h = torch.stack(
             (returns_embeddings, state_embeddings, action_embeddings), dim=1
         ).permute(0, 2, 1, 3).reshape(B, 3 * T, self.h_dim)
@@ -147,9 +149,12 @@ class DecisionTransformer(nn.Module):
         h = self.transformer(h)
 
         # get h reshaped such that its size = (B x 3 x T x h_dim) and
-        # h[:, 0, t] is conditioned on r_0, s_0, a_0 ... r_t
-        # h[:, 1, t] is conditioned on r_0, s_0, a_0 ... r_t, s_t
-        # h[:, 2, t] is conditioned on r_0, s_0, a_0 ... r_t, s_t, a_t
+        # h[:, 0, t] is conditioned on the input sequence r_0, s_0, a_0 ... r_t
+        # h[:, 1, t] is conditioned on the input sequence r_0, s_0, a_0 ... r_t, s_t
+        # h[:, 2, t] is conditioned on the input sequence r_0, s_0, a_0 ... r_t, s_t, a_t
+        # that is, for each timestep (t) we have 3 transformer output embeddings,
+        # each conditioned on all previous timesteps plus 
+        # the 3 input variables at that timestep (r_t, s_t, a_t).
         h = h.reshape(B, T, 3, self.h_dim).permute(0, 2, 1, 3)
 
         # get predictions
